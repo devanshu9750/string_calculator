@@ -18,15 +18,22 @@ int add(String numbers) {
   Set<String> delimiter = {',', '\n'}; // Instead of [Set] a [RegExp] can also be used
   String currentNumber = '';
   String negativeNumbers = '';
+  int startIndex = 0;
 
   if (numbers.startsWith('//')) {
-    delimiter.add(numbers[2]); // Add custom delimiter to the [Set]
+    if (numbers[2] == '[') {
+      int endIndex = numbers.indexOf(']');
+      String customDelimiter = numbers.substring(3, endIndex);
+      delimiter.add(customDelimiter);
+      startIndex = endIndex + 1;
+    } else {
+      delimiter.add(numbers[2]); // Add custom delimiter to the [Set]
+      startIndex = 4; // Skip the custom delimiter declaration
+    }
   }
 
-  int startIndex = numbers.startsWith('//') ? 4 : 0;
-
-  for (int i = startIndex; i < numbers.length; i++) {
-    if (delimiter.contains(numbers[i])) {
+  while (startIndex < numbers.length) {
+    if (delimiter.any((element) => element[0] == numbers[startIndex])) {
       if (currentNumber.isNotEmpty) {
         int parsedNumber = int.parse(currentNumber);
 
@@ -38,8 +45,9 @@ int add(String numbers) {
       }
       currentNumber = '';
     } else {
-      currentNumber += numbers[i];
+      currentNumber += numbers[startIndex];
     }
+    startIndex++;
   }
 
   if (currentNumber.isNotEmpty) {
@@ -60,6 +68,8 @@ int add(String numbers) {
 }
 
 void main() {
+  // Test cases for the add function
+  
   // Empty string should return 0
   print("Empty String : ${add("")}"); // Output: 0
 
@@ -103,4 +113,8 @@ void main() {
   // Handling numbers greater than 1000 (should be ignored)
   print("Handling numbers greater than 1000 : ${add("1001,2,3,1000")}"); // Output: 5
   print("Handling numbers greater than 1000 with custom delimiter : ${add("//=\n1001=2=3=1002")}"); // Output: 5
+
+  // Handling delimiters with length greater than 1
+  print("Handling delimiters with length greater than 1 : ${add("//[**]\n1**4**3")}"); // Output: 8
+  print("Handling delimiters with length greater than 2 : ${add("//[++]\n1++40++3")}"); // Output: 44
 }

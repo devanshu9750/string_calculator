@@ -9,7 +9,13 @@ int add(String numbers) {
   Set<String> delimiter = {',', '\n'}; // Instead of [Set] a [RegExp] can also be used
   String currentNumber = '';
 
-  for (int i = 0; i < numbers.length; i++) {
+  if (numbers.startsWith('//')) {
+    delimiter.add(numbers[2]); // Add custom delimiter to the [Set]
+  }
+
+  int startIndex = numbers.startsWith('//') ? 4 : 0;
+
+  for (int i = startIndex; i < numbers.length; i++) {
     if (delimiter.contains(numbers[i])) {
       if (currentNumber.isNotEmpty) sum += int.parse(currentNumber);
       currentNumber = '';
@@ -45,4 +51,8 @@ void main() {
 
   // Handling numbers separated by new lines
   print("Handling numbers separated by new lines : ${add("4\n8,9")}"); // Output: 21
+
+  // Handling custom delimiter
+  print("Handling custom delimiter : ${add("//=\n9=2=3")}"); // Output: 14
+  print("Handling custom delimiter without numbers : ${add("//=\n")}"); // Output: 0
 }

@@ -6,11 +6,11 @@ int add(String numbers) {
   if (numbers.isEmpty) return 0;
 
   int sum = 0;
-  String delimiter = ',';
+  Set<String> delimiter = {',', '\n'}; // Instead of [Set] a [RegExp] can also be used
   String currentNumber = '';
 
   for (int i = 0; i < numbers.length; i++) {
-    if (numbers[i] == delimiter) {
+    if (delimiter.contains(numbers[i])) {
       if (currentNumber.isNotEmpty) sum += int.parse(currentNumber);
       currentNumber = '';
     } else {
@@ -42,4 +42,7 @@ void main() {
   print(
     "Handling large amount of numbers in the string : ${add("11,22,33,1,8,67,67,7,34,5,4,65,4,6,5,7,6,43,4,3,5,4,2,23,2,5,5,4,67,34,5,2345,4,66")}",
   ); // Output: 2973
+
+  // Handling numbers separated by new lines
+  print("Handling numbers separated by new lines : ${add("4\n8,9")}"); // Output: 21
 }

@@ -1,3 +1,12 @@
+/// Helper function to format negative numbers into a string.
+String _getNegativeNumbersString(String negativeNumbers, int number) {
+  if (negativeNumbers.isEmpty) {
+    return number.toString();
+  } else {
+    return '$negativeNumbers,$number';
+  }
+}
+
 /// A function that takes a string of comma-separated numbers.
 /// Algorithm : Split the string by the delimiter, convert each segment to an integer, and sum them up.
 /// But instead of using split method, it manually iterates through the string to find delimiters and accumulate the sum.
@@ -8,6 +17,7 @@ int add(String numbers) {
   int sum = 0;
   Set<String> delimiter = {',', '\n'}; // Instead of [Set] a [RegExp] can also be used
   String currentNumber = '';
+  String negativeNumbers = '';
 
   if (numbers.startsWith('//')) {
     delimiter.add(numbers[2]); // Add custom delimiter to the [Set]
@@ -17,14 +27,34 @@ int add(String numbers) {
 
   for (int i = startIndex; i < numbers.length; i++) {
     if (delimiter.contains(numbers[i])) {
-      if (currentNumber.isNotEmpty) sum += int.parse(currentNumber);
+      if (currentNumber.isNotEmpty) {
+        int parsedNumber = int.parse(currentNumber);
+
+        if (parsedNumber < 0) {
+          negativeNumbers = _getNegativeNumbersString(negativeNumbers, parsedNumber);
+        } else {
+          sum += parsedNumber;
+        }
+      }
       currentNumber = '';
     } else {
       currentNumber += numbers[i];
     }
   }
 
-  if (currentNumber.isNotEmpty) sum += int.parse(currentNumber);
+  if (currentNumber.isNotEmpty) {
+    int parsedNumber = int.parse(currentNumber);
+
+    if (parsedNumber < 0) {
+      negativeNumbers = _getNegativeNumbersString(negativeNumbers, parsedNumber);
+    } else {
+      sum += parsedNumber;
+    }
+  }
+
+  if (negativeNumbers.isNotEmpty) {
+    throw Exception('negative numbers not allowed $negativeNumbers');
+  }
 
   return sum;
 }
@@ -55,4 +85,18 @@ void main() {
   // Handling custom delimiter
   print("Handling custom delimiter : ${add("//=\n9=2=3")}"); // Output: 14
   print("Handling custom delimiter without numbers : ${add("//=\n")}"); // Output: 0
+
+  // Handling negative numbers (should throw an exception)
+  try {
+    print("Handling negative numbers : ${add("1,-2,-3")}");
+  } catch (e) {
+    print(e);
+  }
+
+  // Handling negative numbers with custom delimiter
+  try {
+    print("Handling negative numbers with custom delimiter : ${add("//=\n-9=2=-3")}");
+  } catch (e) {
+    print(e);
+  }
 }

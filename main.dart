@@ -33,7 +33,7 @@ int add(String numbers) {
         if (parsedNumber < 0) {
           negativeNumbers = _getNegativeNumbersString(negativeNumbers, parsedNumber);
         } else {
-          sum += parsedNumber;
+          if (parsedNumber <= 1000) sum += parsedNumber;
         }
       }
       currentNumber = '';
@@ -48,7 +48,7 @@ int add(String numbers) {
     if (parsedNumber < 0) {
       negativeNumbers = _getNegativeNumbersString(negativeNumbers, parsedNumber);
     } else {
-      sum += parsedNumber;
+      if (parsedNumber <= 1000) sum += parsedNumber;
     }
   }
 
@@ -99,4 +99,8 @@ void main() {
   } catch (e) {
     print(e);
   }
+
+  // Handling numbers greater than 1000 (should be ignored)
+  print("Handling numbers greater than 1000 : ${add("1001,2,3,1000")}"); // Output: 5
+  print("Handling numbers greater than 1000 with custom delimiter : ${add("//=\n1001=2=3=1002")}"); // Output: 5
 }

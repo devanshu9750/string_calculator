@@ -7,8 +7,7 @@ String _getNegativeNumbersString(String negativeNumbers, int number) {
   }
 }
 
-/// A function that takes a string of comma-separated numbers.
-/// Algorithm : Split the string by the delimiter, convert each segment to an integer, and sum them up.
+/// Split the string by the delimiter, convert each segment to an integer, and sum them up.
 /// But instead of using split method, it manually iterates through the string to find delimiters and accumulate the sum.
 /// This allows the function to handle any amount of numbers in the string.
 int add(String numbers) {
